@@ -50,4 +50,13 @@ public class Goals {
             System.out.println(goal);
         }
     }
+
+    public static void deleteGoal(List<Goal> goals, int i) {
+        if (i >= 0 && i < goals.size()) {
+            Goal removedGoal = goals.remove(i);
+            System.out.println("Obiettivo '" + removedGoal.getNome() + "' eliminato con successo.");
+        } else {
+            System.out.println("Indice non valido. Nessun obiettivo eliminato.");
+        }
+    }
 }

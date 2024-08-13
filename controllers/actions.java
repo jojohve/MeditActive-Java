@@ -10,6 +10,7 @@ import controllers.Bookings;
 import controllers.Goals;
 import controllers.Users;
 
+@SuppressWarnings("unused") //da togliere
 public class actions {
     public static void main(String[] args) {
         List<User> users = Users.readUsersFromFile("csv\\utenti.csv");
@@ -40,11 +41,18 @@ public class actions {
                             break;
 
                         case 2:
-                            System.out.println("Decidi un obiettivo esistente:");
+                            System.out.println("Decidi un obiettivo esistente:"); // mancante
                             break;
 
                         case 3:
-                            System.out.println("Rimuovi un obiettivo:");
+                            System.out.println(
+                                    "Inserisci il numero dell'obiettivo da eliminare (1 per il primo, 2 per il secondo, ecc.):");
+                            try {
+                                int i = Integer.parseInt(scanner.nextLine()) - 1;
+                                Goals.deleteGoal(goals, i);
+                            } catch (NumberFormatException e) {
+                                System.out.println("Devi inserire un numero valido.");
+                            }
                             break;
 
                         case 4:
@@ -53,7 +61,7 @@ public class actions {
                             break;
 
                         case 5:
-                            System.out.println("Esporta un file con gli obiettivi disponibili:");
+                            System.out.println("Esporta un file con gli obiettivi disponibili:");// mancante
                             break;
 
                         case 0:
@@ -63,7 +71,7 @@ public class actions {
                                 System.out.println("Ritorniamo al menu principale.");
                                 result = -1;
                             } else if (confirm.equals("SI")) {
-                                System.out.println("Addio!");
+                                System.out.println("A Presto!");
                                 result = 0;
                             } else {
                                 System.out.println("Risposta non valida. Per favore, inserisci 'SI' o 'NO'.");
