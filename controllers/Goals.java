@@ -3,6 +3,7 @@ package controllers;
 import models.Goal;
 import java.io.BufferedReader;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -51,12 +52,36 @@ public class Goals {
         }
     }
 
+    public static void choiceGoal(List<Goal> goals) {
+        for (Goal goal : goals) {
+            System.out.println(goal);
+        }
+    }
+
     public static void deleteGoal(List<Goal> goals, int i) {
         if (i >= 0 && i < goals.size()) {
             Goal removedGoal = goals.remove(i);
             System.out.println("Obiettivo '" + removedGoal.getNome() + "' eliminato con successo.");
         } else {
             System.out.println("Indice non valido. Nessun obiettivo eliminato.");
+        }
+    }
+
+    public static void exportGoalsToCSV(List<Goal> goals, String filePath) {
+        try (FileWriter writer = new FileWriter(filePath)) {
+            writer.append("ID;Nome;Descrizione;Data di Inizio;Data di Fine\n");
+
+            for (Goal goal : goals) {
+                writer.append(goal.getId() + ";");
+                writer.append(goal.getNome() + ";");
+                writer.append(goal.getDescrizione() + ";");
+                writer.append(goal.getTipologia() + ";");
+                writer.append(goal.getDurata() + "\n");
+            }
+
+            System.out.println("Esportazione completata con successo in " + filePath);
+        } catch (IOException e) {
+            System.out.println("Errore durante l'esportazione del file: " + e.getMessage());
         }
     }
 }

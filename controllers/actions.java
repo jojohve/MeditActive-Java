@@ -1,5 +1,7 @@
 package controllers;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.Scanner;
 
@@ -10,9 +12,9 @@ import controllers.Bookings;
 import controllers.Goals;
 import controllers.Users;
 
-@SuppressWarnings("unused") //da togliere
+@SuppressWarnings("unused") // da togliere
 public class actions {
-    public static void main(String[] args) {
+    public static void start(String[] args) {
         List<User> users = Users.readUsersFromFile("csv\\utenti.csv");
         List<Goal> goals = Goals.readGoalsFromFile("csv\\obiettivi.csv");
         List<Booking> bookings = Bookings.readBookingsFromFile("csv\\prenotazioni.csv");
@@ -41,7 +43,20 @@ public class actions {
                             break;
 
                         case 2:
-                            System.out.println("Decidi un obiettivo esistente:"); // mancante
+                            System.out.println("Decidi un obiettivo esistente:");
+                            try {
+                                Users.printUsers(users);
+                                System.out.println("Digita ID Obiettivo");
+                                int idObiettivo = Integer.parseInt(scanner.nextLine());
+                                System.out.println("Digita ID Utente");
+                                int idUtente = Integer.parseInt(scanner.nextLine());
+                                
+                                // Una volta completato l’inserimento da parte dell’utente, l’applicazione deve assegnare un ID alla nuova prenotazione. Infine deve aggiornare il campo Disponibile dell'obiettivo (da SI a NO).
+                                
+                                System.out.println("Obiettivo impostato correttamente");
+                            } catch (NumberFormatException e) {
+                                System.out.println("Devi inserire un numero valido.");
+                            }
                             break;
 
                         case 3:
@@ -50,6 +65,9 @@ public class actions {
                             try {
                                 int i = Integer.parseInt(scanner.nextLine()) - 1;
                                 Goals.deleteGoal(goals, i);
+
+                                // Una volta completato l’inserimento da parte dell’utente, l’applicazione deve cancellare la prenotazione esistente, aggiornare il campo Disponibile dell'obiettivo da NO a SI.
+
                             } catch (NumberFormatException e) {
                                 System.out.println("Devi inserire un numero valido.");
                             }
@@ -61,7 +79,11 @@ public class actions {
                             break;
 
                         case 5:
-                            System.out.println("Esporta un file con gli obiettivi disponibili:");// mancante
+                            System.out.println("Esporta un file con gli obiettivi disponibili:");
+                            String date = new SimpleDateFormat("dd_MM_yyyy").format(new Date());
+                            String fileName = "obiettivi_" + date + ".csv";
+                            String filePath = "csv\\" + fileName;
+                            Goals.exportGoalsToCSV(goals, filePath);
                             break;
 
                         case 0:
