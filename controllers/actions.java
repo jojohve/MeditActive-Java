@@ -12,7 +12,7 @@ import controllers.Bookings;
 import controllers.Goals;
 import controllers.Users;
 
-@SuppressWarnings("unused") // da togliere
+@SuppressWarnings("unused")
 public class actions {
     public static void start(String[] args) {
         List<User> users = Users.readUsersFromFile("csv\\utenti.csv");
@@ -50,10 +50,27 @@ public class actions {
                                 int idObiettivo = Integer.parseInt(scanner.nextLine());
                                 System.out.println("Digita ID Utente");
                                 int idUtente = Integer.parseInt(scanner.nextLine());
-                                
-                                // Una volta completato l’inserimento da parte dell’utente, l’applicazione deve assegnare un ID alla nuova prenotazione. Infine deve aggiornare il campo Disponibile dell'obiettivo (da SI a NO).
-                                
-                                System.out.println("Obiettivo impostato correttamente");
+
+                                Goal selectedGoal = null;
+                                for (Goal goal : goals) {
+                                    if (goal.getId() == idObiettivo) {
+                                        selectedGoal = goal;
+                                        break;
+                                    }
+                                }
+
+                                if (selectedGoal != null && selectedGoal.getDisponibilità().equals("SI")) {
+                                    int newBookingId = bookings.size() + 1;
+
+                                    Booking newBooking = new Booking(newBookingId, idObiettivo, idUtente, null, null);
+                                    bookings.add(newBooking);
+
+                                    selectedGoal.setDisponibilità("NO");
+
+                                    System.out.println("Prenotazione creata e obiettivo aggiornato con successo!");
+                                } else {
+                                    System.out.println("Obiettivo non trovato o non disponibile.");
+                                }
                             } catch (NumberFormatException e) {
                                 System.out.println("Devi inserire un numero valido.");
                             }
@@ -65,8 +82,6 @@ public class actions {
                             try {
                                 int i = Integer.parseInt(scanner.nextLine()) - 1;
                                 Goals.deleteGoal(goals, i);
-
-                                // Una volta completato l’inserimento da parte dell’utente, l’applicazione deve cancellare la prenotazione esistente, aggiornare il campo Disponibile dell'obiettivo da NO a SI.
 
                             } catch (NumberFormatException e) {
                                 System.out.println("Devi inserire un numero valido.");
