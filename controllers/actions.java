@@ -15,9 +15,9 @@ import controllers.Users;
 @SuppressWarnings("unused")
 public class actions {
     public static void start(String[] args) {
-        List<User> users = Users.readUsersFromFile("csv\\utenti.csv");
-        List<Goal> goals = Goals.readGoalsFromFile("csv\\obiettivi.csv");
-        List<Booking> bookings = Bookings.readBookingsFromFile("csv\\prenotazioni.csv");
+        List<User> users = Users.readUsersFromFile("MeditActive\\csv\\utenti.csv");
+        List<Goal> goals = Goals.readGoalsFromFile("MeditActive\\csv\\obiettivi.csv");
+        List<Booking> bookings = Bookings.readBookingsFromFile("MeditActive\\csv\\prenotazioni.csv");
 
         Scanner scanner = new Scanner(System.in);
         int result = -1;
