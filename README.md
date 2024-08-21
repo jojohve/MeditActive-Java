@@ -8,12 +8,12 @@ Struttura del Progetto
     controllers: Contiene le classi Users, Goals, Bookings e actions che gestiscono la logica dell'applicazione.
     csv: Directory contenente i file CSV per utenti, obiettivi e prenotazioni.
 
-    Requisiti
+Requisiti
 
     Java Development Kit (JDK): Versione 8 o superiore
     PowerShell: Per eseguire i comandi suggeriti (o un terminale compatibile)
 
-    Utilizzo
+Utilizzo //
 Menu Principale
 
 L'applicazione presenta un menu principale dove l'utente può selezionare diverse operazioni:
