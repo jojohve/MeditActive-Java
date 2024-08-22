@@ -1,5 +1,6 @@
 package controllers;
 
+import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -15,9 +16,15 @@ import controllers.Users;
 @SuppressWarnings("unused")
 public class actions {
     public static void start(String[] args) {
-        List<User> users = Users.readUsersFromFile("D:\\Desktop\\Joseph La Luna D\\Progetti\\informatica\\java\\MeditActive\\csv\\utenti.csv");
-        List<Goal> goals = Goals.readGoalsFromFile("D:\\Desktop\\Joseph La Luna D\\Progetti\\informatica\\java\\MeditActive\\csv\\obiettivi.csv");
-        List<Booking> bookings = Bookings.readBookingsFromFile("D:\\Desktop\\Joseph La Luna D\\Progetti\\informatica\\java\\MeditActive\\csv\\prenotazioni.csv");
+        String baseDir = System.getProperty("user.dir");
+
+        String usersPath = Paths.get(baseDir, "csv", "utenti.csv").toString();
+        String goalsPath = Paths.get(baseDir, "csv", "obiettivi.csv").toString();
+        String bookingsPath = Paths.get(baseDir, "csv", "prenotazioni.csv").toString();
+
+        List<User> users = Users.readUsersFromFile(usersPath);
+        List<Goal> goals = Goals.readGoalsFromFile(goalsPath);
+        List<Booking> bookings = Bookings.readBookingsFromFile(bookingsPath);
 
         Scanner scanner = new Scanner(System.in);
         int result = -1;
