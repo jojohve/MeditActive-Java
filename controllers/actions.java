@@ -1,5 +1,6 @@
 package controllers;
 
+import java.io.FileNotFoundException;
 import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -16,11 +17,11 @@ import controllers.Users;
 @SuppressWarnings("unused")
 public class actions {
     public static void start(String[] args) {
-        String baseDir = System.getProperty("user.dir");
+        String currentDir = System.getProperty("user.dir");
 
-        String usersPath = Paths.get(baseDir, "csv", "utenti.csv").toString();
-        String goalsPath = Paths.get(baseDir, "csv", "obiettivi.csv").toString();
-        String bookingsPath = Paths.get(baseDir, "csv", "prenotazioni.csv").toString();
+        String usersPath = Paths.get("csv", "utenti.csv").toAbsolutePath().toString();
+        String goalsPath = Paths.get("csv", "obiettivi.csv").toAbsolutePath().toString();
+        String bookingsPath = Paths.get("csv", "prenotazioni.csv").toAbsolutePath().toString();
 
         List<User> users = Users.readUsersFromFile(usersPath);
         List<Goal> goals = Goals.readGoalsFromFile(goalsPath);
