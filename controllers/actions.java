@@ -25,7 +25,6 @@ public class actions {
         List<Booking> bookings = null;
 
         try {
-            // Leggi i file CSV e carica i dati
             users = readUsersFromFile("csv/utenti.csv");
             goals = readGoalsFromFile("csv/obiettivi.csv");
             bookings = readBookingsFromFile("csv/prenotazioni.csv");
