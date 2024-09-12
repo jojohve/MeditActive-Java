@@ -9,17 +9,49 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Goals {
+    @SuppressWarnings("unused")
+    private static final String filePath = "csv/obiettivi.csv";
+
+    static List<Goal> loadGoalsFromFile(String filePath) {
+        List<Goal> goals = new ArrayList<>();
+        try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
+            String line;
+            br.readLine();
+
+            while ((line = br.readLine()) != null) {
+                String[] fields = line.split(";");
+                if (fields.length == 6) {
+                    try {
+                        int id = Integer.parseInt(fields[0]);
+                        String nome = fields[1];
+                        String descrizione = fields[2];
+                        String tipologia = fields[3];
+                        int durata = Integer.parseInt(fields[4]);
+                        String disponibilità = fields[5];
+
+                        goals.add(new Goal(id, nome, descrizione, tipologia, durata, disponibilità));
+                    } catch (NumberFormatException e) {
+                        System.out.println("Errore nel parsing della riga: " + line);
+                        e.printStackTrace();
+                    }
+                } else {
+                    System.out.println("Formato della riga non valido: " + line);
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return goals;
+    }
 
     public static List<Goal> readGoalsFromFile(String filePath) {
         List<Goal> goals = new ArrayList<>();
-
         try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
             String line;
             br.readLine();
 
             while ((line = br.readLine()) != null) {
                 String[] values = line.split(";");
-
                 if (values.length < 6) {
                     System.out.println("Riga mal formattata: " + line);
                     continue;
@@ -33,6 +65,11 @@ public class Goals {
                     int durata = Integer.parseInt(values[4]);
                     String disponibilità = values[5];
 
+                    if (durata < 0) {
+                        System.out.println("Durata negativa in riga: " + line);
+                        continue;
+                    }
+
                     Goal goal = new Goal(id, nome, descrizione, tipologia, durata, disponibilità);
                     goals.add(goal);
                 } catch (NumberFormatException e) {
@@ -40,19 +77,12 @@ public class Goals {
                 }
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            System.out.println("Errore durante la lettura del file: " + e.getMessage());
         }
-
         return goals;
     }
 
     public static void printGoals(List<Goal> goals) {
-        for (Goal goal : goals) {
-            System.out.println(goal);
-        }
-    }
-
-    public static void choiceGoal(List<Goal> goals) {
         for (Goal goal : goals) {
             System.out.println(goal);
         }
@@ -70,7 +100,7 @@ public class Goals {
 
     public static void exportGoalsToCSV(List<Goal> goals, String filePath) {
         try (FileWriter writer = new FileWriter(filePath)) {
-            writer.append("ID;Nome;Descrizione;Data di Inizio;Data di Fine\n");
+            writer.append("ID;Nome;Descrizione;Tipologia;Durata\n");
 
             for (Goal goal : goals) {
                 writer.append(goal.getId() + ";");

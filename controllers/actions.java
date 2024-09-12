@@ -1,10 +1,5 @@
 package controllers;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -17,21 +12,12 @@ import models.User;
 
 public class actions {
 
+    private static List<User> users = new ArrayList<>();
+    private static List<Goal> goals = new ArrayList<>();
+    private static List<Booking> bookings = new ArrayList<>();
+
     public static void start(String[] args) {
-        List<User> users = null;
-        List<Goal> goals = null;
-        List<Booking> bookings = null;
-
-        try {
-            users = readUsersFromFile("csv/utenti.csv");
-            goals = readGoalsFromFile("csv/obiettivi.csv");
-            bookings = readBookingsFromFile("csv/prenotazioni.csv");
-
-        } catch (IOException e) {
-            System.err.println("Errore durante la lettura dei file: " + e.getMessage());
-            e.printStackTrace();
-            return;
-        }
+        loadInitialData();
 
         Scanner scanner = new Scanner(System.in);
         int result = -1;
@@ -91,7 +77,8 @@ public class actions {
                             break;
 
                         case 3:
-                            System.out.println("Inserisci il numero dell'obiettivo da eliminare (1 per il primo, 2 per il secondo, ecc.):");
+                            System.out.println(
+                                    "Inserisci il numero dell'obiettivo da eliminare (1 per il primo, 2 per il secondo, ecc.):");
                             try {
                                 int i = Integer.parseInt(scanner.nextLine()) - 1;
                                 Goals.deleteGoal(goals, i);
@@ -125,6 +112,7 @@ public class actions {
                                 result = 0;
                             } else {
                                 System.out.println("Risposta non valida. Per favore, inserisci 'SI' o 'NO'.");
+                                result= 0;
                             }
                             break;
 
@@ -141,90 +129,9 @@ public class actions {
         scanner.close();
     }
 
-    private static List<User> readUsersFromFile(String filePath) throws IOException {
-        List<User> users = new ArrayList<>();
-        try (InputStream is = actions.class.getClassLoader().getResourceAsStream(filePath)) {
-            if (is == null) {
-                System.err.println("File non trovato nel classpath: " + filePath);
-                // Fornisci dati di esempio se il file non è trovato
-                users.add(new User(1, "Mario", "Rossi", new SimpleDateFormat("dd/MM/yyyy").parse("01/01/1980"), "Via Roma 1", "ABC123"));
-                return users;
-            }
-            try (BufferedReader br = new BufferedReader(new InputStreamReader(is))) {
-                String line;
-                while ((line = br.readLine()) != null) {
-                    String[] values = line.split(",");
-                    if (values.length == 6) {
-                        int id = Integer.parseInt(values[0]);
-                        String nome = values[1];
-                        String cognome = values[2];
-                        Date dataDiNascita = new SimpleDateFormat("dd/MM/yyyy").parse(values[3]);
-                        String indirizzo = values[4];
-                        String documentoId = values[5];
-                        users.add(new User(id, nome, cognome, dataDiNascita, indirizzo, documentoId));
-                    }
-                }
-            }
-        } catch (ParseException e) {
-            System.err.println("Errore nella parsing della data: " + e.getMessage());
-        }
-        return users;
+    private static void loadInitialData() {
+        users = Users.loadUsersFromFile("csv/utenti.csv");
+        goals = Goals.loadGoalsFromFile("csv/obiettivi.csv");
+        bookings = Bookings.loadBookingsFromFile("csv/prenotazioni.csv");
     }
-    
-    private static List<Goal> readGoalsFromFile(String filePath) throws IOException {
-        List<Goal> goals = new ArrayList<>();
-        try (InputStream is = actions.class.getClassLoader().getResourceAsStream(filePath)) {
-            if (is == null) {
-                System.err.println("File non trovato nel classpath: " + filePath);
-                // Fornisci dati di esempio se il file non è trovato
-                goals.add(new Goal(1, "Obiettivo Esempio", "Descrizione Esempio", "Tipologia Esempio", 30, "SI"));
-                return goals;
-            }
-            try (BufferedReader br = new BufferedReader(new InputStreamReader(is))) {
-                String line;
-                while ((line = br.readLine()) != null) {
-                    String[] values = line.split(",");
-                    if (values.length == 6) {
-                        int id = Integer.parseInt(values[0]);
-                        String nome = values[1];
-                        String descrizione = values[2];
-                        String tipologia = values[3];
-                        int durata = Integer.parseInt(values[4]);
-                        String disponibilità = values[5];
-                        goals.add(new Goal(id, nome, descrizione, tipologia, durata, disponibilità));
-                    }
-                }
-            }
-        }
-        return goals;
-    }
-    
-    private static List<Booking> readBookingsFromFile(String filePath) throws IOException {
-        List<Booking> bookings = new ArrayList<>();
-        try (InputStream is = actions.class.getClassLoader().getResourceAsStream(filePath)) {
-            if (is == null) {
-                System.err.println("File non trovato nel classpath: " + filePath);
-                // Fornisci dati di esempio se il file non è trovato
-                bookings.add(new Booking(1, 1, 1, new Date(), new Date()));
-                return bookings;
-            }
-            try (BufferedReader br = new BufferedReader(new InputStreamReader(is))) {
-                String line;
-                while ((line = br.readLine()) != null) {
-                    String[] values = line.split(",");
-                    if (values.length == 5) {
-                        int id = Integer.parseInt(values[0]);
-                        int idObiettivo = Integer.parseInt(values[1]);
-                        int idUtente = Integer.parseInt(values[2]);
-                        Date dataInizio = new SimpleDateFormat("dd/MM/yyyy").parse(values[3]);
-                        Date dataFine = new SimpleDateFormat("dd/MM/yyyy").parse(values[4]);
-                        bookings.add(new Booking(id, idObiettivo, idUtente, dataInizio, dataFine));
-                    }
-                }
-            } catch (ParseException e) {
-                System.err.println("Errore nella parsing della data: " + e.getMessage());
-            }
-        }
-        return bookings;
-    }
-}    
+}
