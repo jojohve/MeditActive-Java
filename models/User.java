@@ -1,10 +1,8 @@
 package models;
 
 import java.util.Date;
-import java.text.SimpleDateFormat;
 
 public class User {
-
     private int id;
     private String nome;
     private String cognome;
@@ -21,7 +19,7 @@ public class User {
         this.documentoId = documentoId;
     }
 
-    // Getters & setters
+    // Getters e Setters
     public int getId() {
         return id;
     }
@@ -72,14 +70,7 @@ public class User {
 
     @Override
     public String toString() {
-        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-        return "User {" +
-                "id = " + id +
-                ", nome = '" + nome + '\'' +
-                ", cognome = '" + cognome + '\'' +
-                ", dataDiNascita = " + sdf.format(dataDiNascita) +
-                ", indirizzo = '" + indirizzo + '\'' +
-                ", documentoId = '" + documentoId + '\'' +
-                '}';
+        return String.format("ID: %d, Nome: %s, Cognome: %s, Data di nascita: %s",
+                id, nome, cognome, dataDiNascita.toString());
     }
 }

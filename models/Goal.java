@@ -1,24 +1,23 @@
 package models;
 
 public class Goal {
-
     private int id;
     private String nome;
     private String descrizione;
     private String tipologia;
     private int durata;
-    private String disponibilità;
+    private String disponibilita;
 
-    public Goal(int id, String nome, String descrizione, String tipologia, int durata, String disponibilità) {
+    public Goal(int id, String nome, String descrizione, String tipologia, int durata, String disponibilita) {
         this.id = id;
         this.nome = nome;
         this.descrizione = descrizione;
         this.tipologia = tipologia;
         this.durata = durata;
-        this.disponibilità = disponibilità;
+        this.disponibilita = disponibilita;
     }
 
-    // Getters & setters
+    // Getters e Setters
     public int getId() {
         return id;
     }
@@ -59,23 +58,17 @@ public class Goal {
         this.durata = durata;
     }
 
-    public String getDisponibilità() {
-        return disponibilità;
+    public String getDisponibilita() {
+        return disponibilita;
     }
 
-    public void setDisponibilità(String disponibilità) {
-        this.disponibilità = disponibilità;
+    public void setDisponibilita(String disponibilita) {
+        this.disponibilita = disponibilita;
     }
 
     @Override
     public String toString() {
-        return "Goal {" +
-                "id = " + id +
-                ", nome = '" + nome + '\'' +
-                ", descrizione = '" + descrizione + '\'' +
-                ", tipologia = '" + tipologia + '\'' +
-                ", durata = " + durata +
-                ", disponibilità = " + disponibilità +
-                '}';
+        return String.format("ID: %d, Nome: %s, Durata: %d giorni, Disponibile: %s",
+                id, nome, durata, disponibilita);
     }
 }

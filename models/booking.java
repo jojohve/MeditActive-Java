@@ -3,7 +3,6 @@ package models;
 import java.util.Date;
 
 public class Booking {
-
     private int id;
     private int idCorso;
     private int idUtente;
@@ -18,7 +17,7 @@ public class Booking {
         this.dataFine = dataFine;
     }
 
-    // Getters & setters
+    // Getters e Setters
     public int getId() {
         return id;
     }
@@ -61,12 +60,7 @@ public class Booking {
 
     @Override
     public String toString() {
-        return "Booking {" +
-                "id = " + id +
-                ", idCorso = " + idCorso +
-                ", idUtente = " + idUtente +
-                ", dataInizio = " + dataInizio +
-                ", dataFine = " + dataFine +
-                '}';
+        return String.format("Booking ID: %d, User ID: %d, Goal ID: %d, From: %s, To: %s",
+                id, idUtente, idCorso, dataInizio, dataFine);
     }
 }

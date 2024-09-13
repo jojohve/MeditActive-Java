@@ -1,6 +1,7 @@
 package controllers;
 
 import models.Booking;
+
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
@@ -11,42 +12,11 @@ import java.util.Date;
 import java.util.List;
 
 public class Bookings {
-    @SuppressWarnings("unused")
     private static final String filePath = "csv/prenotazioni.csv";
+    private static List<Booking> bookings = new ArrayList<>();
 
-    static List<Booking> loadBookingsFromFile(String filePath) {
-        List<Booking> bookings = new ArrayList<>();
-        try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
-            String line;
-            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-            br.readLine();
-
-            while ((line = br.readLine()) != null) {
-                String[] fields = line.split(";");
-                if (fields.length == 5) {
-                    try {
-                        int id = Integer.parseInt(fields[0]);
-                        int idCorso = Integer.parseInt(fields[1]);
-                        int idUtente = Integer.parseInt(fields[2]);
-                        Date dataInizio = sdf.parse(fields[3]);
-                        Date dataFine = sdf.parse(fields[4]);
-
-                        bookings.add(new Booking(id, idCorso, idUtente, dataInizio, dataFine));
-                    } catch (NumberFormatException e) {
-                        System.out.println("Errore nel parsing della riga (NumberFormatException): " + line);
-                        e.printStackTrace();
-                    } catch (ParseException e) {
-                        System.out.println("Errore nel parsing della data (ParseException): " + line);
-                        e.printStackTrace();
-                    }
-                } else {
-                    System.out.println("Formato della riga non valido: " + line);
-                }
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return bookings;
+    public static void loadBookings() {
+        bookings = readBookingsFromFile(filePath);
     }
 
     public static List<Booking> readBookingsFromFile(String filePath) {
@@ -85,9 +55,13 @@ public class Bookings {
         return bookings;
     }
 
-    public static void printBookings(List<Booking> bookings) {
+    public static void printBookings() {
         for (Booking booking : bookings) {
             System.out.println(booking);
         }
+    }
+
+    public static List<Booking> getBookings() {
+        return bookings;
     }
 }

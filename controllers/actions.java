@@ -10,6 +10,7 @@ import models.Booking;
 import models.Goal;
 import models.User;
 
+@SuppressWarnings("unused")
 public class actions {
 
     private static List<User> users = new ArrayList<>();
@@ -17,7 +18,9 @@ public class actions {
     private static List<Booking> bookings = new ArrayList<>();
 
     public static void start(String[] args) {
-        loadInitialData();
+        Users.loadUsers();
+        Goals.loadGoals();
+        Bookings.loadBookings();
 
         Scanner scanner = new Scanner(System.in);
         int result = -1;
@@ -39,50 +42,35 @@ public class actions {
                     switch (result) {
                         case 1:
                             System.out.println("Stampa di tutti gli obiettivi:");
-                            Goals.printGoals(goals);
+                            Goals.printGoals();
                             break;
 
                         case 2:
                             System.out.println("Decidi un obiettivo esistente:");
-                            try {
-                                Users.printUsers(users);
-                                System.out.println("Digita ID Obiettivo");
-                                int idObiettivo = Integer.parseInt(scanner.nextLine());
-                                System.out.println("Digita ID Utente");
-                                int idUtente = Integer.parseInt(scanner.nextLine());
+                            Users.printUsers();
+                            System.out.println("Digita ID Obiettivo:");
+                            int idObiettivo = Integer.parseInt(scanner.nextLine());
+                            System.out.println("Digita ID Utente:");
+                            int idUtente = Integer.parseInt(scanner.nextLine());
 
-                                Goal selectedGoal = null;
-                                for (Goal goal : goals) {
-                                    if (goal.getId() == idObiettivo) {
-                                        selectedGoal = goal;
-                                        break;
-                                    }
-                                }
+                            Goal selectedGoal = Goals.getGoalById(idObiettivo);
 
-                                if (selectedGoal != null && selectedGoal.getDisponibilità().equals("SI")) {
-                                    int newBookingId = bookings.size() + 1;
-
-                                    Booking newBooking = new Booking(newBookingId, idObiettivo, idUtente, null, null);
-                                    bookings.add(newBooking);
-
-                                    selectedGoal.setDisponibilità("NO");
-
-                                    System.out.println("Prenotazione creata e obiettivo aggiornato con successo!");
-                                } else {
-                                    System.out.println("Obiettivo non trovato o non disponibile.");
-                                }
-                            } catch (NumberFormatException e) {
-                                System.out.println("Devi inserire un numero valido.");
+                            if (selectedGoal != null && selectedGoal.getDisponibilita().equals("SI")) {
+                                int newBookingId = bookings.size() + 1;
+                                Booking newBooking = new Booking(newBookingId, idObiettivo, idUtente, null, null);
+                                bookings.add(newBooking);
+                                selectedGoal.setDisponibilita("NO");
+                                System.out.println("Prenotazione creata e obiettivo aggiornato con successo!");
+                            } else {
+                                System.out.println("Obiettivo non trovato o non disponibile.");
                             }
                             break;
 
                         case 3:
-                            System.out.println(
-                                    "Inserisci il numero dell'obiettivo da eliminare (1 per il primo, 2 per il secondo, ecc.):");
+                            System.out.println("Inserisci il numero dell'obiettivo da eliminare (1 per il primo, 2 per il secondo, ecc.):");
                             try {
                                 int i = Integer.parseInt(scanner.nextLine()) - 1;
-                                Goals.deleteGoal(goals, i);
-
+                                Goals.deleteGoal(i);
                             } catch (NumberFormatException e) {
                                 System.out.println("Devi inserire un numero valido.");
                             }
@@ -98,7 +86,7 @@ public class actions {
                             String date = new SimpleDateFormat("dd_MM_yyyy").format(new Date());
                             String fileName = "obiettivi_" + date + ".csv";
                             String filePath = "csv/" + fileName;
-                            Goals.exportGoalsToCSV(goals, filePath);
+                            Goals.exportGoalsToCSV(filePath);
                             break;
 
                         case 0:
@@ -112,7 +100,7 @@ public class actions {
                                 result = 0;
                             } else {
                                 System.out.println("Risposta non valida. Per favore, inserisci 'SI' o 'NO'.");
-                                result= 0;
+                                result = 0;
                             }
                             break;
 
@@ -122,16 +110,10 @@ public class actions {
                     }
                 }
             } catch (NumberFormatException e) {
-                System.out.println("Devi scegliere un numero");
+                System.out.println("Devi scegliere un numero valido.");
             }
         } while (result != 0);
 
         scanner.close();
-    }
-
-    private static void loadInitialData() {
-        users = Users.loadUsersFromFile("csv/utenti.csv");
-        goals = Goals.loadGoalsFromFile("csv/obiettivi.csv");
-        bookings = Bookings.loadBookingsFromFile("csv/prenotazioni.csv");
     }
 }
