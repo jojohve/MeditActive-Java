@@ -15,14 +15,16 @@ public class FileManager {
             try (BufferedReader br = new BufferedReader(new InputStreamReader(is))) {
                 String line;
                 while ((line = br.readLine()) != null) {
-                    data.add(line.split(";"));
+                    String[] parts = line.split(";");
+                    data.add(parts);
+                    System.out.println("Lettura linea: " + String.join(", ", parts));
                 }
             }
         } catch (IOException e) {
             System.out.println("Errore nella lettura del file: " + e.getMessage());
         }
         return data;
-    }
+    }    
 
     public static void writeCSV(String filePath, List<String[]> data) {
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(filePath))) {

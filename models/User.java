@@ -1,5 +1,6 @@
 package models;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class User {
@@ -9,6 +10,7 @@ public class User {
     private Date dataDiNascita;
     private String indirizzo;
     private String documentoId;
+    private static final SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
 
     public User(int id, String nome, String cognome, Date dataDiNascita, String indirizzo, String documentoId) {
         this.id = id;
@@ -71,6 +73,6 @@ public class User {
     @Override
     public String toString() {
         return String.format("ID: %d, Nome: %s, Cognome: %s, Data di nascita: %s",
-                id, nome, cognome, dataDiNascita.toString());
+                id, nome, cognome, dateFormat.format(dataDiNascita));
     }
 }

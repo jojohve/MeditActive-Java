@@ -1,8 +1,6 @@
 package controllers;
 
 import models.Booking;
-import models.Goal;
-import models.User;
 import utils.FileManager;
 
 import java.io.BufferedReader;
@@ -13,6 +11,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.io.FileWriter;
 
 public class Bookings {
     private static List<Booking> bookings = new ArrayList<>();
@@ -25,8 +24,9 @@ public class Bookings {
                 if (row.length >= 5) {
                     Date dataInizio = dateFormat.parse(row[3]);
                     Date dataFine = dateFormat.parse(row[4]);
-                    bookings.add(new Booking(Integer.parseInt(row[0]), Integer.parseInt(row[1]), Integer.parseInt(row[2]),
-                            dataInizio, dataFine));
+                    bookings.add(
+                            new Booking(Integer.parseInt(row[0]), Integer.parseInt(row[1]), Integer.parseInt(row[2]),
+                                    dataInizio, dataFine));
                 } else {
                     System.out.println("Riga mal formattata: " + String.join(", ", row));
                 }
@@ -36,7 +36,7 @@ public class Bookings {
                 System.out.println("Errore di formattazione numerica: " + e.getMessage());
             }
         }
-    }    
+    }
 
     public static List<Booking> readBookingsFromFile(String filePath) {
         List<Booking> bookings = new ArrayList<>();
@@ -63,7 +63,7 @@ public class Bookings {
                     Booking booking = new Booking(id, idCorso, idUtente, dataInizio, dataFine);
                     bookings.add(booking);
                 } catch (NumberFormatException e) {
-                    System.out.println("Errore di formattazione in riga: " + line);
+                    System.out.println("Errore di formattazione numerica in riga: " + line);
                 } catch (ParseException e) {
                     System.out.println("Errore di parsing della data in riga: " + line);
                 }
@@ -80,32 +80,57 @@ public class Bookings {
         }
     }
 
+    public static void addBooking(int id, int idCorso, int idUtente, Date dataInizio, Date dataFine) {
+        Booking newBooking = new Booking(id, idCorso, idUtente, dataInizio, dataFine);
+        bookings.add(newBooking);
+        System.out.println("Prenotazione aggiunta con successo.");
+    }
+
+    public static void deleteBooking(int bookingId) {
+        Booking toRemove = null;
+        for (Booking booking : bookings) {
+            if (booking.getId() == bookingId) {
+                toRemove = booking;
+                break;
+            }
+        }
+
+        if (toRemove != null) {
+            bookings.remove(toRemove);
+            System.out.println("Prenotazione eliminata con successo.");
+        } else {
+            System.out.println("Prenotazione non trovata.");
+        }
+    }
+
+    public static void exportBookingsToCSV(String exportFilePath) {
+        try (FileWriter writer = new FileWriter(exportFilePath)) {
+            writer.append("ID;ID Corso;ID Utente;Data Inizio;Data Fine\n");
+
+            for (Booking booking : bookings) {
+                writer.append(booking.getId() + ";");
+                writer.append(booking.getIdCorso() + ";");
+                writer.append(booking.getIdUtente() + ";");
+                writer.append(new SimpleDateFormat("dd/MM/yyyy").format(booking.getDataInizio()) + ";");
+                writer.append(new SimpleDateFormat("dd/MM/yyyy").format(booking.getDataFine()) + "\n");
+            }
+
+            System.out.println("Esportazione completata con successo in " + exportFilePath);
+        } catch (IOException e) {
+            System.out.println("Errore durante l'esportazione del file: " + e.getMessage());
+        }
+    }
+
     public static List<Booking> getBookings() {
         return bookings;
     }
 
-    public static void addBooking(Booking newBooking) {
-        Goal selectedGoal = Goals.getGoalById(newBooking.getIdCorso());
-        User selectedUser = Users.getUserById(newBooking.getIdUtente());
-    
-        if (selectedGoal != null && selectedGoal.getDisponibilita().equals("SI") && selectedUser != null) {
-            int newBookingId = bookings.size() + 1;
-            Booking bookingWithNewId = new Booking(newBookingId, newBooking.getIdCorso(), newBooking.getIdUtente(),
-                    newBooking.getDataInizio(), newBooking.getDataFine());
-            bookings.add(bookingWithNewId);
-    
-            selectedGoal.setDisponibilita("NO");
-    
-            System.out.println("Prenotazione creata e obiettivo aggiornato con successo!");
-        } else {
-            if (selectedGoal == null) {
-                System.out.println("Obiettivo non trovato.");
-            } else if (!selectedGoal.getDisponibilita().equals("SI")) {
-                System.out.println("Obiettivo non disponibile.");
-            }
-            if (selectedUser == null) {
-                System.out.println("Utente non trovato.");
+    public static Booking getBookingById(int id) {
+        for (Booking booking : bookings) {
+            if (booking.getId() == id) {
+                return booking;
             }
         }
+        return null;
     }
 }

@@ -32,12 +32,14 @@ public class Users {
 
     public static List<User> readUsersFromFile(String filePath) {
         List<User> users = new ArrayList<>();
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
             String line;
             br.readLine();
 
             while ((line = br.readLine()) != null) {
                 String[] values = line.split(";");
+                
                 if (values.length < 6) {
                     System.out.println("Riga mal formattata: " + line);
                     continue;
@@ -63,7 +65,7 @@ public class Users {
             System.out.println("Errore durante la lettura del file: " + e.getMessage());
         }
         return users;
-    }
+    }    
 
     public static void printUsers() {
         for (User user : users) {
@@ -71,9 +73,7 @@ public class Users {
         }
     }
 
-    public static void addUser(int id, String nome, String cognome, Date dataDiNascita, String indirizzo,
-            String documentoId) {
-        User newUser = new User(id, nome, cognome, dataDiNascita, indirizzo, documentoId);
+    public static void addUser(User newUser) {
         users.add(newUser);
         System.out.println("Utente aggiunto con successo.");
     }
@@ -106,7 +106,7 @@ public class Users {
         System.out.println("Inserisci Documento ID:");
         String documentoId = scanner.nextLine();
 
-        addUser(id, nome, cognome, dataDiNascita, indirizzo, documentoId);
+        addUser(new User(id, nome, cognome, dataDiNascita, indirizzo, documentoId));
     }
 
     public static void deleteUser(int userId) {

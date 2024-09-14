@@ -36,26 +36,36 @@ public class actions {
                             Goals.printGoals();
                             break;
 
-                            case 2:
+                        case 2:
                             System.out.println("Decidi un obiettivo esistente:");
                             Users.printUsers();
                             System.out.println("Digita ID Obiettivo:");
                             int idObiettivo = Integer.parseInt(scanner.nextLine());
                             System.out.println("Digita ID Utente:");
                             int idUtente = Integer.parseInt(scanner.nextLine());
-                        
+
                             Goal selectedGoal = Goals.getGoalById(idObiettivo);
-                        
+
                             if (selectedGoal != null && selectedGoal.getDisponibilita().equals("SI")) {
-                                Booking newBooking = new Booking(Bookings.getBookings().size() + 1, idObiettivo, idUtente, null, null);
-                                Bookings.addBooking(newBooking);
-                                selectedGoal.setDisponibilita("NO");
-                                System.out.println("Prenotazione creata e obiettivo aggiornato con successo!");
+                                System.out.println("Inserisci Data Inizio (yyyy-MM-dd):");
+                                String dataInizioStr = scanner.nextLine();
+                                String dataFineStr = scanner.nextLine();
+                                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+                                try {
+                                    Booking newBooking = new Booking(Bookings.getBookings().size() + 1, idObiettivo, idUtente,
+                                            dateFormat.parse(dataInizioStr), dateFormat.parse(dataFineStr));
+                                    Bookings.addBooking(newBooking.getId(), newBooking.getIdCorso(), newBooking.getIdUtente(),
+                                            newBooking.getDataInizio(), newBooking.getDataFine());
+                                    selectedGoal.setDisponibilita("NO");
+                                    System.out.println("Prenotazione creata e obiettivo aggiornato con successo!");
+                                } catch (Exception e) {
+                                    System.out.println("Errore nella data: " + e.getMessage());
+                                }
                             } else {
                                 System.out.println("Obiettivo non trovato o non disponibile.");
                             }
                             break;
-                        
+
                         case 3:
                             System.out.println(
                                     "Inserisci il numero dell'obiettivo da eliminare (1 per il primo, 2 per il secondo, ecc.):");
