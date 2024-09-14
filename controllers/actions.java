@@ -90,21 +90,27 @@ public class actions {
                             Goals.exportGoalsToCSV(filePath);
                             break;
 
-                        case 0:
-                            System.out.println("Sei davvero sicuro di voler uscire? (SI/NO)");
-                            String confirm = scanner.nextLine().trim().toUpperCase();
-                            if (confirm.equals("NO")) {
-                                System.out.println("Ritorniamo al menu principale.");
-                                result = -1;
-                            } else if (confirm.equals("SI")) {
-                                System.out.println("A Presto!");
-                                result = 0;
-                            } else {
-                                System.out.println("Risposta non valida. Per favore, inserisci 'SI' o 'NO'.");
-                                result = 0;
+                            case 0:
+                            String confirm;
+                            boolean validResponse = false;
+                        
+                            while (!validResponse) {
+                                System.out.println("Sei davvero sicuro di voler uscire? (SI/NO)");
+                                confirm = scanner.nextLine().trim().toUpperCase();
+                                if (confirm.equals("NO")) {
+                                    System.out.println("Ritorniamo al menu principale.");
+                                    result = -1;
+                                    validResponse = true;
+                                } else if (confirm.equals("SI")) {
+                                    System.out.println("A Presto!");
+                                    result = 0;
+                                    validResponse = true;
+                                } else {
+                                    System.out.println("Risposta non valida. Per favore, inserisci 'SI' o 'NO'.");
+                                }
                             }
                             break;
-
+                        
                         default:
                             System.out.println("Scegli un altro numero");
                             break;

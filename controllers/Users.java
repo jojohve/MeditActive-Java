@@ -41,7 +41,7 @@ public class Users {
                 String[] values = line.split(";");
                 
                 if (values.length < 6) {
-                    System.out.println("Riga mal formattata: " + line);
+                   // System.out.println("Riga mal formattata: " + line);
                     continue;
                 }
 

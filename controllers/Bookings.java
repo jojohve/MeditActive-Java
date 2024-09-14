@@ -49,7 +49,7 @@ public class Bookings {
             while ((line = br.readLine()) != null) {
                 String[] values = line.split(";");
                 if (values.length < 5) {
-                    System.out.println("Riga mal formattata: " + line);
+                    // System.out.println("Riga mal formattata: " + line);
                     continue;
                 }
 
