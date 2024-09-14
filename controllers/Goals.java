@@ -16,7 +16,22 @@ public class Goals {
     public static void loadGoalsFromFile() {
         List<String[]> data = FileManager.readCSV("csv/obiettivi.csv");
         for (String[] row : data) {
-            goals.add(new Goal(Integer.parseInt(row[0]), row[1], row[2], row[3], Integer.parseInt(row[4]), row[5]));
+            try {
+                if (row.length >= 6) {
+                    int id = Integer.parseInt(row[0]);
+                    String nome = row[1];
+                    String descrizione = row[2];
+                    String tipologia = row[3];
+                    int durata = Integer.parseInt(row[4]);
+                    String disponibilità = row[5];
+    
+                    goals.add(new Goal(id, nome, descrizione, tipologia, durata, disponibilità));
+                } else {
+                    System.out.println("Riga mal formattata: " + String.join(", ", row));
+                }
+            } catch (NumberFormatException e) {
+                System.out.println("Errore di formattazione numerica: " + e.getMessage());
+            }
         }
     }
 

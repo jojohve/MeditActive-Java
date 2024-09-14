@@ -19,17 +19,24 @@ public class Bookings {
 
     public static void loadBookingsFromFile() {
         List<String[]> data = FileManager.readCSV("csv/prenotazioni.csv");
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         for (String[] row : data) {
             try {
-                Date dataInizio = new SimpleDateFormat("yyyy-MM-dd").parse(row[3]);
-                Date dataFine = new SimpleDateFormat("yyyy-MM-dd").parse(row[4]);
-                bookings.add(new Booking(Integer.parseInt(row[0]), Integer.parseInt(row[1]), Integer.parseInt(row[2]),
-                        dataInizio, dataFine));
+                if (row.length >= 5) {
+                    Date dataInizio = dateFormat.parse(row[3]);
+                    Date dataFine = dateFormat.parse(row[4]);
+                    bookings.add(new Booking(Integer.parseInt(row[0]), Integer.parseInt(row[1]), Integer.parseInt(row[2]),
+                            dataInizio, dataFine));
+                } else {
+                    System.out.println("Riga mal formattata: " + String.join(", ", row));
+                }
             } catch (ParseException e) {
                 System.out.println("Errore di parsing della data: " + e.getMessage());
+            } catch (NumberFormatException e) {
+                System.out.println("Errore di formattazione numerica: " + e.getMessage());
             }
         }
-    }
+    }    
 
     public static List<Booking> readBookingsFromFile(String filePath) {
         List<Booking> bookings = new ArrayList<>();
