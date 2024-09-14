@@ -1,6 +1,9 @@
 package controllers;
 
 import models.Booking;
+import models.Goal;
+import models.User;
+import utils.FileManager;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -12,11 +15,20 @@ import java.util.Date;
 import java.util.List;
 
 public class Bookings {
-    private static final String filePath = "csv/prenotazioni.csv";
     private static List<Booking> bookings = new ArrayList<>();
 
-    public static void loadBookings() {
-        bookings = readBookingsFromFile(filePath);
+    public static void loadBookingsFromFile() {
+        List<String[]> data = FileManager.readCSV("csv/prenotazioni.csv");
+        for (String[] row : data) {
+            try {
+                Date dataInizio = new SimpleDateFormat("yyyy-MM-dd").parse(row[3]);
+                Date dataFine = new SimpleDateFormat("yyyy-MM-dd").parse(row[4]);
+                bookings.add(new Booking(Integer.parseInt(row[0]), Integer.parseInt(row[1]), Integer.parseInt(row[2]),
+                        dataInizio, dataFine));
+            } catch (ParseException e) {
+                System.out.println("Errore di parsing della data: " + e.getMessage());
+            }
+        }
     }
 
     public static List<Booking> readBookingsFromFile(String filePath) {
@@ -63,5 +75,30 @@ public class Bookings {
 
     public static List<Booking> getBookings() {
         return bookings;
+    }
+
+    public static void addBooking(Booking newBooking) {
+        Goal selectedGoal = Goals.getGoalById(newBooking.getIdCorso());
+        User selectedUser = Users.getUserById(newBooking.getIdUtente());
+    
+        if (selectedGoal != null && selectedGoal.getDisponibilita().equals("SI") && selectedUser != null) {
+            int newBookingId = bookings.size() + 1;
+            Booking bookingWithNewId = new Booking(newBookingId, newBooking.getIdCorso(), newBooking.getIdUtente(),
+                    newBooking.getDataInizio(), newBooking.getDataFine());
+            bookings.add(bookingWithNewId);
+    
+            selectedGoal.setDisponibilita("NO");
+    
+            System.out.println("Prenotazione creata e obiettivo aggiornato con successo!");
+        } else {
+            if (selectedGoal == null) {
+                System.out.println("Obiettivo non trovato.");
+            } else if (!selectedGoal.getDisponibilita().equals("SI")) {
+                System.out.println("Obiettivo non disponibile.");
+            }
+            if (selectedUser == null) {
+                System.out.println("Utente non trovato.");
+            }
+        }
     }
 }

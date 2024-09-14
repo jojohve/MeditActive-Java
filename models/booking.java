@@ -1,5 +1,6 @@
 package models;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class Booking {
@@ -8,6 +9,7 @@ public class Booking {
     private int idUtente;
     private Date dataInizio;
     private Date dataFine;
+    private static final SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
 
     public Booking(int id, int idCorso, int idUtente, Date dataInizio, Date dataFine) {
         this.id = id;
@@ -15,8 +17,8 @@ public class Booking {
         this.idUtente = idUtente;
         this.dataInizio = dataInizio;
         this.dataFine = dataFine;
-    }
-
+    }    
+    
     // Getters e Setters
     public int getId() {
         return id;
@@ -61,6 +63,6 @@ public class Booking {
     @Override
     public String toString() {
         return String.format("Booking ID: %d, User ID: %d, Goal ID: %d, From: %s, To: %s",
-                id, idUtente, idCorso, dataInizio, dataFine);
+                id, idUtente, idCorso, dateFormat.format(dataInizio), dateFormat.format(dataFine));
     }
 }

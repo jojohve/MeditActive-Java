@@ -17,7 +17,7 @@ public class User {
         this.dataDiNascita = dataDiNascita;
         this.indirizzo = indirizzo;
         this.documentoId = documentoId;
-    }
+    }    
 
     // Getters e Setters
     public int getId() {

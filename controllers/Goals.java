@@ -1,6 +1,7 @@
 package controllers;
 
 import models.Goal;
+import utils.FileManager;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -10,11 +11,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Goals {
-    private static final String filePath = "csv/obiettivi.csv";
     private static List<Goal> goals = new ArrayList<>();
 
-    public static void loadGoals() {
-        goals = readGoalsFromFile(filePath);
+    public static void loadGoalsFromFile() {
+        List<String[]> data = FileManager.readCSV("csv/obiettivi.csv");
+        for (String[] row : data) {
+            goals.add(new Goal(Integer.parseInt(row[0]), row[1], row[2], row[3], Integer.parseInt(row[4]), row[5]));
+        }
     }
 
     public static List<Goal> readGoalsFromFile(String filePath) {

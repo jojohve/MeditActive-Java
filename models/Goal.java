@@ -15,7 +15,7 @@ public class Goal {
         this.tipologia = tipologia;
         this.durata = durata;
         this.disponibilita = disponibilita;
-    }
+    }    
 
     // Getters e Setters
     public int getId() {

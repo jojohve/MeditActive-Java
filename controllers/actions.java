@@ -1,26 +1,17 @@
 package controllers;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
 import java.util.Scanner;
 
 import models.Booking;
 import models.Goal;
-import models.User;
 
-@SuppressWarnings("unused")
 public class actions {
 
-    private static List<User> users = new ArrayList<>();
-    private static List<Goal> goals = new ArrayList<>();
-    private static List<Booking> bookings = new ArrayList<>();
-
     public static void start(String[] args) {
-        Users.loadUsers();
-        Goals.loadGoals();
-        Bookings.loadBookings();
+        Users.loadUsersFromFile();
+        Goals.loadGoalsFromFile();
+        Bookings.loadBookingsFromFile();
 
         Scanner scanner = new Scanner(System.in);
         int result = -1;
@@ -45,29 +36,29 @@ public class actions {
                             Goals.printGoals();
                             break;
 
-                        case 2:
+                            case 2:
                             System.out.println("Decidi un obiettivo esistente:");
                             Users.printUsers();
                             System.out.println("Digita ID Obiettivo:");
                             int idObiettivo = Integer.parseInt(scanner.nextLine());
                             System.out.println("Digita ID Utente:");
                             int idUtente = Integer.parseInt(scanner.nextLine());
-
+                        
                             Goal selectedGoal = Goals.getGoalById(idObiettivo);
-
+                        
                             if (selectedGoal != null && selectedGoal.getDisponibilita().equals("SI")) {
-                                int newBookingId = bookings.size() + 1;
-                                Booking newBooking = new Booking(newBookingId, idObiettivo, idUtente, null, null);
-                                bookings.add(newBooking);
+                                Booking newBooking = new Booking(Bookings.getBookings().size() + 1, idObiettivo, idUtente, null, null);
+                                Bookings.addBooking(newBooking);
                                 selectedGoal.setDisponibilita("NO");
                                 System.out.println("Prenotazione creata e obiettivo aggiornato con successo!");
                             } else {
                                 System.out.println("Obiettivo non trovato o non disponibile.");
                             }
                             break;
-
+                        
                         case 3:
-                            System.out.println("Inserisci il numero dell'obiettivo da eliminare (1 per il primo, 2 per il secondo, ecc.):");
+                            System.out.println(
+                                    "Inserisci il numero dell'obiettivo da eliminare (1 per il primo, 2 per il secondo, ecc.):");
                             try {
                                 int i = Integer.parseInt(scanner.nextLine()) - 1;
                                 Goals.deleteGoal(i);
@@ -83,7 +74,7 @@ public class actions {
 
                         case 5:
                             System.out.println("Esporta un file con gli obiettivi disponibili:");
-                            String date = new SimpleDateFormat("dd_MM_yyyy").format(new Date());
+                            String date = new SimpleDateFormat("dd_MM_yyyy").format(new java.util.Date());
                             String fileName = "obiettivi_" + date + ".csv";
                             String filePath = "csv/" + fileName;
                             Goals.exportGoalsToCSV(filePath);

@@ -6,12 +6,17 @@ import java.util.List;
 
 public class FileManager {
 
-    public static List<String[]> readCSV(String filePath) {
+    public static List<String[]> readCSV(String fileName) {
         List<String[]> data = new ArrayList<>();
-        try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
-            String line;
-            while ((line = br.readLine()) != null) {
-                data.add(line.split(";"));
+        try (InputStream is = FileManager.class.getClassLoader().getResourceAsStream(fileName)) {
+            if (is == null) {
+                throw new FileNotFoundException("File non trovato nel JAR: " + fileName);
+            }
+            try (BufferedReader br = new BufferedReader(new InputStreamReader(is))) {
+                String line;
+                while ((line = br.readLine()) != null) {
+                    data.add(line.split(";"));
+                }
             }
         } catch (IOException e) {
             System.out.println("Errore nella lettura del file: " + e.getMessage());

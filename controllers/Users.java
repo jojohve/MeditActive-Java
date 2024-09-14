@@ -1,6 +1,7 @@
 package controllers;
 
 import models.User;
+import utils.FileManager;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -14,13 +15,19 @@ import java.util.List;
 import java.util.Scanner;
 
 public class Users {
-    private static final String filePath = "csv/utenti.csv";
+    private static final SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
     private static List<User> users = new ArrayList<>();
 
-    private static final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-
-    public static void loadUsers() {
-        users = readUsersFromFile(filePath);
+    public static void loadUsersFromFile() {
+        List<String[]> data = FileManager.readCSV("csv/utenti.csv");
+        for (String[] row : data) {
+            try {
+                Date dataDiNascita = new SimpleDateFormat("yyyy-MM-dd").parse(row[3]);
+                users.add(new User(Integer.parseInt(row[0]), row[1], row[2], dataDiNascita, row[4], row[5]));
+            } catch (ParseException e) {
+                System.out.println("Errore di parsing della data: " + e.getMessage());
+            }
+        }
     }
 
     public static List<User> readUsersFromFile(String filePath) {
@@ -127,7 +134,7 @@ public class Users {
                 writer.append(user.getId() + ";");
                 writer.append(user.getNome() + ";");
                 writer.append(user.getCognome() + ";");
-                writer.append(dateFormat.format(user.getDataDiNascita()) + ";"); // Formattazione della data
+                writer.append(dateFormat.format(user.getDataDiNascita()) + ";");
                 writer.append(user.getIndirizzo() + ";");
                 writer.append(user.getDocumentoId() + "\n");
             }
@@ -140,5 +147,14 @@ public class Users {
 
     public static List<User> getUsers() {
         return users;
+    }
+
+    public static User getUserById(int idUtente) {
+        for (User user : users) {
+            if (user.getId() == idUtente) {
+                return user;
+            }
+        }
+        return null;
     }
 }
