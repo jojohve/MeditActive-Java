@@ -30,3 +30,23 @@ Funzionalità Principali
     Decidere un obiettivo: Assegna un obiettivo a un utente e crea una prenotazione.
     Rimuovere un obiettivo: Cancella un obiettivo e aggiorna la sua disponibilità.
     Esportazione CSV: Esporta un file CSV con tutti gli obiettivi disponibili.
+
+Requisiti
+
+    Java Development Kit (JDK) (v8 o superiore)
+    PowerShell (o un terminale compatibile)
+
+Installazione
+
+Clona questo repository:
+            
+    git clone 
+
+https://github.com/jojohve/MeditActive-Java.git
+
+    cd MeditActive-Java
+
+Compila ed esegui il progetto:
+
+    javac App.java
+    java App
